@@ -11,16 +11,14 @@ struct Point {
 };
 
 int main() {
-    Vec<Point> points = {Point{1, 2}, Point{3, 4}};
-    Vec<Point> other_points;
-    for(int i = 0; i < 20; i++) {
-        other_points.push(Point{0, 0});
-    }
+    stringc::String x = "Hello world";
+    vec::Vec<Point> floats = {Point{1, 1}, Point{2, 2}, Point{3, 3}, Point{3, 3}, Point{3, 3}};
 
-    points.extend(other_points);
-    points.foreach([](Point p) {
-        std::cout << "Point: " << p.x << ", " << p.y << std::endl;
+    floats.foreach([](Point p) {
+        
     });
+
+    std::cout << floats.length() << std::endl;
 
     return 0;
 }
