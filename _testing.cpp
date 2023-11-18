@@ -2,6 +2,8 @@
 
 #include "stringc.h"
 #include "vec.h"
+#include "mathc.h"
+#include <cmath>
 
 struct Point {
     int x, y;
@@ -11,14 +13,14 @@ struct Point {
 };
 
 int main() {
-    stringc::String x = "Hello world";
-    vec::Vec<Point> floats = {Point{1, 1}, Point{2, 2}, Point{3, 3}, Point{3, 3}, Point{3, 3}};
+    vec::Vec<stringc::String> vec;
 
-    floats.foreach([](Point p) {
-        
-    });
+    std::cout << std::ceil(mathc::PI) << std::endl;
+    std::cout << mathc::ceil(mathc::PI) << std::endl;
 
-    std::cout << floats.length() << std::endl;
+    std::cout << "------" << std::endl;
 
+    std::cout << std::floor(-mathc::PI) << std::endl;
+    std::cout << mathc::floor(-mathc::PI) << std::endl;
     return 0;
 }

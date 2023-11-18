@@ -39,25 +39,25 @@ namespace stringc {
         String(): m_array(nullptr), m_length(0) {};
         String(const char* string) : m_length(strlen(string)) {
             this->m_array = new char[this->m_length + 1];
-            strcpy(this->m_array, string);
+            this->m_array[this->m_length] = '\0';
 
-            this->m_length = strlen(string);
+            strcpy(this->m_array, string);
         }
         String(const String& other) : m_length(other.length()) {
             this->m_array = new char[this->m_length + 1];
-            strcpy(this->m_array, other.m_array);
+            this->m_array[this->m_length] = '\0';
 
-            this->m_length = other.length();
+            strcpy(this->m_array, other.m_array);
         }
         String(const std::string other) : m_length(other.length()) {
             this->m_array = new char[this->m_length + 1];
+            this->m_array[this->m_length] = '\0';
+            
             strcpy(this->m_array, other.data());
-
-            this->m_length = other.length();
         }
 
         ~String() {
-            delete[] m_array;
+            delete[] this->m_array;
         }
 
         // Getters
@@ -104,13 +104,38 @@ namespace stringc {
             delete[] this->m_array;
             this->m_array = buff;
             this->m_length = new_size;
-            delete[] buff;
         }
         
         void replace(const char* pattern, const char* to_replace) {
             size_t count = 0;
 
         };
+
+        String repeat(size_t amount) {
+            size_t new_length = this->m_length * amount;
+            char* new_array = new char[new_length + 1];
+            new_array[new_length] = '\0';
+
+            strcpy(new_array, this->m_array);
+            for(size_t i = 1; i < amount; i++) {
+                // much faster than strcat(new_array, this->m_array)
+                memcpy(new_array + (i * this->m_length), this->m_array, this->m_length);
+            }
+
+            return String(new_array);
+        }
+
+        vec::Vec<stringc::String> split(const char* pattern) {
+            vec::Vec<stringc::String> split_vec = {};
+            size_t offset = strlen(pattern);
+            for(size_t i = 0; i < this->m_length; i++) {
+                if(strcmp(pattern, this->slice(i, i + offset).stringc()) == 0) {
+                    
+                }
+            }
+
+            return split_vec;
+        }
 
         void to_lower() {
             m_to(65, 90, 32);
@@ -131,6 +156,19 @@ namespace stringc {
         friend std::ostream& operator<<(std::ostream& os, const String& s) {
             os << s.m_array;
             return os;
+        }
+
+        String& operator=(const String& other) {
+            if(this != &other) {
+                delete[] this->m_array;
+
+                this->m_length = other.m_length;
+                this->m_array = new char[this->m_length];
+                
+                strcpy(this->m_array, other.m_array);
+            }
+
+            return *this;
         }
     };
 }

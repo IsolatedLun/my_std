@@ -1,6 +1,8 @@
 #pragma once
 
 #include <functional>
+#include <exception>
+#include <iostream>
 
 #include "mathc.h"
 
@@ -12,25 +14,26 @@ namespace vec {
         size_t m_length = 0;
         size_t m_capacity = 0;
 
-        void resize(size_t new_capacity) {
-            T* new_vec = new T[new_capacity];
-            std::copy(this->m_vec, this->m_vec + this->m_length, new_vec);
-            
+    public:
+        Vec():  m_vec(new T[1]), m_length(0), m_capacity(1) {};
+        Vec(T el):  m_vec(new T[1]), m_capacity(1) { 
+            this->push(el);
+        }
+        Vec(const Vec<T>& other) {
             delete[] this->m_vec;
 
-            this->m_vec = new_vec;
-            this->m_capacity = new_capacity;
-        }
-
-    public:
-        Vec():  m_vec(nullptr), m_length(0), m_capacity(0) {};
-        Vec(T el):  m_vec(nullptr) { 
-            this->push(el);
+            this->m_vec = other.m_vec;
+            this->m_capacity = other.m_capacity;
+            this->m_length = other.m_length; 
         }
 
         template<typename... Args>
-        Vec(Args... els): m_vec(nullptr) {
+        Vec(Args... els): m_vec(new T[1]), m_capacity(1) {
             (this->push(els), ...);
+        }
+
+        ~Vec() {
+            delete[] this->m_vec;
         }
 
         // Getters
@@ -43,22 +46,25 @@ namespace vec {
         }
 
         // Setters
-        void set_capacity(size_t capacity) {
-            if(capacity <= this->m_capacity) {
-                throw std::runtime_error("New capacity is less than the current capacity.");
-            }
-
-            else if (capacity == 0) {
-                throw std::runtime_error("New capacity cannot be 0.");
-            }
-
-            this->resize(capacity);
-        }
         
         // Modifiers
+        void reserve(size_t new_size) {
+            if(new_size > this->m_capacity) {
+                T* reserved_vec = new T[new_size];
+
+                for(size_t i = 0; i < this->m_length; i++) {
+                    reserved_vec[i] = this->m_vec[i];
+                }
+
+                delete[] this->m_vec;
+                this->m_vec = reserved_vec;
+                this->m_capacity = new_size;
+            }
+        }
+        
         void push(T el) {
-            if(this->m_length >= this->m_capacity) {
-                this->resize(mathc::max<size_t>(1, this->m_capacity * 2));
+            if(this->m_length == this->m_capacity) {
+                this->reserve(mathc::max<size_t>(1, this->m_capacity * 2));
             }
 
             this->m_vec[this->m_length++] = el;
