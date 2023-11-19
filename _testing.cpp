@@ -3,7 +3,6 @@
 #include "stringc.h"
 #include "vec.h"
 #include "mathc.h"
-#include <cmath>
 
 struct Point {
     int x, y;
@@ -13,14 +12,7 @@ struct Point {
 };
 
 int main() {
-    vec::Vec<stringc::String> vec;
-
-    std::cout << std::ceil(mathc::PI) << std::endl;
-    std::cout << mathc::ceil(mathc::PI) << std::endl;
-
-    std::cout << "------" << std::endl;
-
-    std::cout << std::floor(-mathc::PI) << std::endl;
-    std::cout << mathc::floor(-mathc::PI) << std::endl;
+    stringc::String x = "Hello!x86World!x86SUII69";
+    std::cout << x.contains("69") << std::endl;
     return 0;
 }

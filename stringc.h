@@ -82,22 +82,23 @@ namespace stringc {
             assert(!(start > end));
 
             char* slice_buff = new char[end - start + 1];
-            for(size_t i = 0; i + start <= end; i++) {
-                slice_buff[i] = this->m_array[i + start];
-            }
-
             slice_buff[end - start] = '\0';
-            String new_string = slice_buff;
+            strncpy(slice_buff, this->m_array + start, end - start);
 
+            String slice = slice_buff;
             delete[] slice_buff;
-            return new_string;
+
+            return slice;
         };
 
         void concat(const char* other) {
-            size_t new_size = this->m_length + strlen(other) + 1;
-            char* buff = new char[new_size];
-            
-            strcat(buff, this->m_array);
+            size_t new_size = this->m_length + strlen(other);
+            char* buff = new char[new_size + 1];
+            buff[0] = '\0';
+
+            if(this->m_array != nullptr)
+                strcat(buff, this->m_array);
+
             strcat(buff, other);
             buff[new_size] = '\0';
 
@@ -122,16 +123,18 @@ namespace stringc {
                 memcpy(new_array + (i * this->m_length), this->m_array, this->m_length);
             }
 
-            return String(new_array);
+            String result = new_array;
+            delete[] new_array;
+            
+            return result;
         }
 
-        vec::Vec<stringc::String> split(const char* pattern) {
-            vec::Vec<stringc::String> split_vec = {};
-            size_t offset = strlen(pattern);
-            for(size_t i = 0; i < this->m_length; i++) {
-                if(strcmp(pattern, this->slice(i, i + offset).stringc()) == 0) {
-                    
-                }
+        vec::Vec<String> split(const char* pattern) {
+            vec::Vec<String> split_vec = {};
+            const char* token = strtok(this->m_array, pattern);
+            while(token != nullptr) {
+                split_vec.push(String{token});
+                token = strtok(nullptr, pattern);
             }
 
             return split_vec;

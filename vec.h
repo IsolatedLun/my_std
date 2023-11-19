@@ -64,7 +64,9 @@ namespace vec {
         
         void push(T el) {
             if(this->m_length == this->m_capacity) {
-                this->reserve(mathc::max<size_t>(1, this->m_capacity * 2));
+                this->reserve(
+                    mathc::max<size_t>(1, mathc::ceil(this->m_capacity * mathc::HALF_PI))
+                );
             }
 
             this->m_vec[this->m_length++] = el;

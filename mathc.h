@@ -2,7 +2,7 @@
 
 namespace mathc {
     double PI = 3.141592653589793;
-
+    double HALF_PI = 1.5707963268;
 
     template<typename T>
     const T& min(T const& a, T const& b) {
